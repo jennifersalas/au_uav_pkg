@@ -31,15 +31,8 @@ After ROS is installed, you can now fork the au_uav_pkg repository.
  
 1. Fork the "au_uav_pkg" repository by clicking the "Fork" button on the github website.  Note:  A more detailed description of forking can be found at help.github.com/articles/fork-a-repo.
 
-2. Open a Terminal and clone this repository into your Home directory by running the following code: 
 ```
-git clone https://github.com/dhj0001/au_uav_pkg.git
-```
-3. Now, move the files and folders in au_uav_pkg (Arduino, Documentation, ExtraTools...etc) into the catkin_ws directory.  You can do this through the Terminal by executing the following commands:
-```
-mv /au_uav_pkg/* /catkin_ws
-```
-4. It's convenient if the ROS environment variables are automatically added to your bash session every time a new shell is launched.  Configure your .bashrc file by typing the following commands:
+2. It's convenient if the ROS environment variables are automatically added to your bash session every time a new shell is launched.  Configure your .bashrc file by typing the following commands:
 ```
 echo "source ~/catkin_ws/devel/setup.bash" >> .bashrc
 echo "export ROS_WORKSPACE=/home/viki/catkin_ws" >> .bashrc
@@ -62,5 +55,7 @@ Launching
 
 To run the au_uav_pkg navigate to your catkin_ws.  Once your are in the catkin_ws, and you have already built the au_uav_pkg, launch the system by entering the following command:
 ```
-roslaunch au_uav_ros guiDriven.launch
+roslaunch au_uav_ros launch.launch 
 ```
+
+NOTE: parameters can be added to the launch command. To see which parameters are available, refer to my Thesis, or to the .launch files.
