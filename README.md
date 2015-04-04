@@ -25,13 +25,12 @@ Key Components
 Installing ROS
 --------------
 
-Before you can clone and use the au_uav_pkg, the Robot Operating System ( **ROS** ) must be setup on your system.  ROS is required to run on unix-based operating systems.  A decision must be made prior to installing ROS: Installing and maintaining a personal unix operating system or using a Virtual Machine with a linux operating system.  For ease of installation, I recommend using a VM.  You can download the VM at http://nootrix.com/downloads (The Groovy Galapagos Version).  In order to install the VM, you will also need to download VirtualBox provided at http://www.virtualbox.org/wiki/Downloads.  If you choose to dual-boot operating systems or have a working version of a unix-based operating system, then simply follow the ROS installation instructions at http://www.ros.org/wiki/ROS/Installation (Make sure to follow the Groovy/catkin instructions).  
+Before you can clone and use the au_uav_pkg, the Robot Operating System ( **ROS** ) must be setup on your system.  ROS is required to run on unix-based operating systems.  A decision must be made prior to installing ROS: Installing and maintaining a personal unix operating system or using a Virtual Machine with a linux operating system.  For ease of installation, I recommend using a VM.  You can download the VM at http://nootrix.com/downloads (The Groovy Galapagos Version).  In order to install the VM, you will also need to download VirtualBox provided at http://www.virtualbox.org/wiki/Downloads.  If you choose to dual-boot operating systems or have a working version of a unix-based operating system, then simply follow the ROS installation instructions at http://www.ros.org/wiki/ROS/Installation (Make sure to follow the Groovy/catkin instructions).
 
 After ROS is installed, you can now fork the au_uav_pkg repository. 
  
 1. Fork the "au_uav_pkg" repository by clicking the "Fork" button on the github website.  Note:  A more detailed description of forking can be found at help.github.com/articles/fork-a-repo.
 
-```
 2. It's convenient if the ROS environment variables are automatically added to your bash session every time a new shell is launched.  Configure your .bashrc file by typing the following commands:
 ```
 echo "source ~/catkin_ws/devel/setup.bash" >> .bashrc
