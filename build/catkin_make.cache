@@ -1,0 +1,2 @@
+au_uav_gui:au_uav_pkg:au_uav_ros
+-DCATKIN_DEVEL_PREFIX=/home/viki/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/viki/catkin_ws/install
