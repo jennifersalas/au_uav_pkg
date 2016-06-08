@@ -1,6 +1,5 @@
 /*
-Implementation of standardFuncs.h.  For information on how to use these functions, visit standardFuncs.h.  Comments in this file
-are related to implementation, not usage.
+Implementation of standardFuncs.h.  For information on how to use these functions, visit standardFuncs.h.  Comments in this file are related to implementation, not usage.
 */
 
 #include <cmath>
@@ -54,25 +53,37 @@ double manipulateAngle(double angle){
 }
 
 /* 
-Returns the distance between two points of latitude and longitude in meters.  The first two parameters
-are the latitude and longitude of the starting point, and the last two parameters are the latitude and
-longitude of the ending point.
+ Returns the distance between two points of latitude and longitude in meters.  The first two parameters are the latitude and longitude of the starting point, and the last two parameters are the latitude and longitude of the ending point.
 */
 
-double findDistance(double lat1, double long1, double lat2, double long2){
+double findDistance(double lat1, double lon1, double lat2, double lon2){
 	
 	/* Get difference in radians */
 	double latDiff = (lat2 - lat1)*DELTA_LAT_TO_METERS;
-	double lonDiff = (long2 - long1)*DELTA_LON_TO_METERS;
+	double lonDiff = (lon2 - lon1)*DELTA_LON_TO_METERS;
 
 	/* Return result in meters */
 	return sqrt(pow(latDiff, 2) + pow(lonDiff, 2));
 }
 
+
 /* 
-Returns the Cartesian angle between two points of latitude and longitude in degrees.  The starting point is given
-by lat1 and long1 (the first two parameters), and the final point is given by lat2 and long2 (the final two parameters).
-The value returned is on the interval [-180, 180].
+ Overloaded findDistance formula to factor in three dimensions. Returns the distance between two points of latitude, longtitude, and altitude in meters. The first three parameters are the latitude, longitude and altitude of the starting point. The last three parameters are the latitude, longitude, and altitude of the ending point. Should not affect existing 2 dimensional architecture.
+ */
+double findDistance(double lat1, double lon1, double alt1, double lat2, double lon2, double alt2){
+
+    /* Get difference in radians */
+    double latDiff = (lat2 - lat1)*DELTA_LAT_TO_METERS;
+    double lonDiff = (lon2 - lon1)*DELTA_LON_TO_METERS;
+    double altDiff = (alt2 - alt1); //Given in meters
+
+    /* Return result in meters */
+    return sqrt(pow(latDiff, 2) + pow(lonDiff, 2) + pow(altDiff, 2));
+}
+
+
+/* 
+Returns the Cartesian angle between two points of latitude and longitude in degrees.  The starting point is given by lat1 and long1 (the first two parameters), and the final point is given by lat2 and long2 (the final two parameters). The value returned is on the interval [-180, 180].
 */
 double findAngle(double lat1, double long1, double lat2, double long2){
 	
@@ -81,7 +92,17 @@ double findAngle(double lat1, double long1, double lat2, double long2){
 	double lonDiff = (long2 - long1)*DELTA_LON_TO_METERS;
 
 	/* Return result in degrees */
-	return atan2(latDiff,lonDiff)*180.0/PI;
+	return atan2(latDiff,lonDiff) * 180.0 / PI;
+}
+/*
+ Returns the angle of elevation between two points of latitude, longitude and altitude.
+ */
+double findElevationAngle (double lat1, double lon1, double alt1, double lat2, double lon2, double alt2) {
+
+    double Z_ = ( alt2 - alt1 );
+    double R_ = findDistance(lat1, lon1, lat2, lon2);
+
+    return atan2( Z_ , R_ ) * 180 / PI ;
 }
 
 /* Returns the sign of the double*/
@@ -98,20 +119,28 @@ double calculateSupplement(double theta){
 }
 
 /*
-Given a waypoint (latitude, longitude, and altitude) as well as the bearing and angular distance to travel,
-calculateCoordinate will return the new location in the form of a waypoint.
+Given a waypoint (latitude, longitude, and altitude) as well as the bearing and angular distance to travel, calculateCoordinate will return the new location in the form of a waypoint.
 */
-au_uav_ros::waypoint calculateCoordinate(au_uav_ros::waypoint currentPosition, double bearing, double distance){
+au_uav_ros::waypoint calculateCoordinate(au_uav_ros::waypoint currentPosition, double bearing, double distance, double elevationAngle){
 	// Calculate final latitude and longitude; see movable-type.co.uk/scripts/latlong.html for more detail
 	bearing *= DEGREES_TO_RADIANS; // convert angle of force to radians
 
+    //Calculate new latitude position
 	double lat1 = currentPosition.latitude*DEGREES_TO_RADIANS; // lat1 = current latitude in radians
 	double dLat = distance*2.0*cos(bearing); // calculate change in latitude
 	double lat2 = lat1 + dLat; // calculate final latitude
+
+    //Calculate new longitude position
 	double dPhi = log(tan(lat2/2+PI/4)/tan(lat1/2+PI/4));
 	double q = (!(dPhi < 0.0001)) ? dLat/dPhi : cos(lat1);  // East-West line gives dPhi=0
 	double dLon = distance*2.0*sin(bearing)/q; // calculate change in longitude
-	
+
+
+    //Calculate new altitude position
+    double alt1 = currentPosition.altitude;
+    double dAlt = distance * cos (elevationAngle);
+    double alt2 = alt1 + dAlt;
+
 	// check for some daft bugger going past the pole, normalise latitude if so
 	if (abs(lat2) > PI/2) 
 		lat2 = lat2>0 ? PI-lat2 : -(PI-lat2);
@@ -126,7 +155,7 @@ au_uav_ros::waypoint calculateCoordinate(au_uav_ros::waypoint currentPosition, d
 	au_uav_ros::waypoint coordinate;
 	coordinate.latitude = lat2;
 	coordinate.longitude = lon2;
-	coordinate.altitude = currentPosition.altitude;
+	coordinate.altitude = alt2;
 	
 	return coordinate;
 }

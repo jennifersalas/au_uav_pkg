@@ -50,12 +50,18 @@ double manipulateAngle(double angle);
 /* Returns the distance between two points of latitude and longitude in meters.  The first two parameters
 are the latitude and longitude of the starting point, and the last two parameters are the latitude and
 longitude of the ending point. */
-double findDistance(double lat1, double long1, double lat2, double long2);
+double findDistance(double lat1, double lon1,
+                    double lat2, double lon2);
+
+double findDistance(double lat1, double lon1, double alt1,
+                    double lat2, double lon2, double alt2);
 
 /* Returns the Cartesian angle between two points of latitude and longitude in degrees.  The starting point
 is given by lat1 and long1 (the first two parameters), and the final point is given by lat2 and long2 (the
 final two parameters). The value returned is on the interval [-180, 180]. */
 double findAngle(double lat1, double long1, double lat2, double long2);
+
+double findElevationAngle (double lat1, double lon1, double alt1, double lat2, double lon2, double alt2);
 
 /* Returns the sign of the double. */
 double findSign(double number);
@@ -67,6 +73,6 @@ double calculateSupplement(double theta);
 Takes the current location in the form of a waypoint, and given a bearing and angular distance, calculates
 a new waypoint at that specified bearing and distance away.
 */
-au_uav_ros::waypoint calculateCoordinate(au_uav_ros::waypoint currentPosition, double bearing, double distance);
+au_uav_ros::waypoint calculateCoordinate(au_uav_ros::waypoint currentPosition, double bearing, double distance, double elevationAngle = 90);
 
 #endif
